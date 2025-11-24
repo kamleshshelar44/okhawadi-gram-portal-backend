@@ -1,33 +1,30 @@
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
- 
-  
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: "okhawadi_uploads",
+      allowed_formats: ["jpg", "jpeg", "png", "webp", "mp4", "mov", "avi"],
+      public_id: file.fieldname + "-" + Date.now()
+    };
   }
 });
 
 const fileFilter = (req, file, cb) => {
-  // Allow images and videos
-  if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+  if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
     cb(null, true);
   } else {
-    cb(new Error('Only image and video files are allowed!'), false);
+    cb(new Error("Only images and videos allowed"), false);
   }
 };
 
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: {
-    fileSize: 50 * 1024 * 1024, // 50MB limit for videos
-  }
+  limits: { fileSize: 50 * 1024 * 1024 }
 });
 
 module.exports = upload;

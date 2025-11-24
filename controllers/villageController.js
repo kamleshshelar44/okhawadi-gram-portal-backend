@@ -325,7 +325,6 @@ const uploadSliderImage = async (req, res) => {
       villageInfo = new VillageInfo();
     }
 
-    // Check if maximum images limit reached
     if (villageInfo.sliderImages && villageInfo.sliderImages.length >= 4) {
       return res.status(400).json({
         success: false,
@@ -334,7 +333,8 @@ const uploadSliderImage = async (req, res) => {
     }
 
     const newImage = {
-      url: `/uploads/${req.file.filename}`,
+      url: req.file.path,                               // Cloudinary URL
+      public_id: req.file.filename,                     // Cloudinary file id 
       caption_en: req.body.caption_en || '',
       caption_mr: req.body.caption_mr || '',
       caption_hi: req.body.caption_hi || '',
