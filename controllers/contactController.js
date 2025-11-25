@@ -31,46 +31,52 @@ const getContactById = async (req, res) => {
   }
 };
 
-const createContact = async (req, res) => {
+const createGalleryItem = async (req, res) => {
   try {
-    const contactData = req.body;
+    const galleryData = req.body;
 
     if (req.file) {
-      contactData.image = `/uploads/${req.file.filename}`;
+      galleryData.url = req.file.path;        // Cloudinary URL
+      galleryData.thumbnail = req.file.path;  // Cloudinary URL
+    } else {
+      return res.status(400).json({
+        message: 'File is required. Please upload an image or video.',
+      });
     }
 
-    const contact = await Contact.create(contactData);
+    const gallery = await Gallery.create(galleryData);
 
     res.status(201).json({
       success: true,
-      data: contact,
+      data: gallery,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-const updateContact = async (req, res) => {
+const updateGalleryItem = async (req, res) => {
   try {
     const updateData = req.body;
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.url = req.file.path;        // Cloudinary URL
+      updateData.thumbnail = req.file.path;  // Cloudinary URL
     }
 
-    const contact = await Contact.findByIdAndUpdate(
+    const gallery = await Gallery.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true, runValidators: true }
     );
 
-    if (!contact) {
-      return res.status(404).json({ message: 'Contact not found' });
+    if (!gallery) {
+      return res.status(404).json({ message: 'Gallery item not found' });
     }
 
     res.status(200).json({
       success: true,
-      data: contact,
+      data: gallery,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
