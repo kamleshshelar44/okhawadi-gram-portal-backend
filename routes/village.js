@@ -9,7 +9,8 @@ const {
   updateSliderImageCaption
 } = require('../controllers/villageController');
 const auth = require('../middleware/auth');
-const multer = require('../middleware/multer');
+const upload = require('../middleware/multer');
+
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.delete('/', auth, deleteVillageInfo);
 router.put('/test', updateVillageInfo);
 
 // Slider image management endpoints - require authentication
-router.post('/slider/upload', auth, multer.single('image'), uploadSliderImage);
+router.post('/slider/upload', auth, upload.single('image'), uploadSliderImage);
 router.delete('/slider/:imageId', auth, deleteSliderImage);
 router.put('/slider/:imageId/caption', auth, updateSliderImageCaption);
 

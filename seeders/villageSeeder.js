@@ -193,22 +193,6 @@ const seedVillageData = async () => {
         phone: '९८७६५४३२१०',
         email: 'sarpanch@okhawadi.in',
         order: 1
-      },
-      {
-        name: 'दिपक रामू जाधव',
-        position: 'गट विकास अधिकारी',
-        department: 'विकास विभाग',
-        phone: '९८७६५४३२११',
-        email: 'gdo@okhawadi.in',
-        order: 2
-      },
-      {
-        name: 'रमेश शंकर पाटील',
-        position: 'ग्रामसेवक',
-        department: 'प्रशासन',
-        phone: '९८७६५४३२१२',
-        email: 'gramsevak@okhawadi.in',
-        order: 3
       }
     ];
 
