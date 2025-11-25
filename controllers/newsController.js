@@ -79,9 +79,9 @@ const getNewsById = async (req, res) => {
 const createNews = async (req, res) => {
   try {
     const newsData = req.body;
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+
     if (req.file) {
-      newsData.image = `${baseUrl}/uploads/${req.file.filename}`;
+      newsData.image = req.file.path;  // Cloudinary URL
     }
 
     const news = await News.create(newsData);
@@ -95,12 +95,13 @@ const createNews = async (req, res) => {
   }
 };
 
+
 const updateNews = async (req, res) => {
   try {
     const updateData = req.body;
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+
     if (req.file) {
-      updateData.image = `${baseUrl}/uploads/${req.file.filename}`;
+      updateData.image = req.file.path;  // Cloudinary URL
     }
 
     const news = await News.findByIdAndUpdate(
@@ -121,6 +122,7 @@ const updateNews = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 const deleteNews = async (req, res) => {
   try {
