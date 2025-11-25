@@ -82,21 +82,13 @@ const getGalleryById = async (req, res) => {
 const createGalleryItem = async (req, res) => {
   try {
     const galleryData = req.body;
-  const baseUrl =`${req.protocol}://${req.get('host')}`;
+
     if (req.file) {
-      galleryData.url = `${baseUrl}/uploads/${req.file.filename}`;
-      galleryData.thumbnail = `${baseUrl}/uploads/${req.file.filename}`;
-      console.log('✅ File uploaded, URL set to:', galleryData.url);
+      galleryData.url = req.file.path;          // Cloudinary URL
+      galleryData.thumbnail = req.file.path;    // Same for thumbnail
     } else {
-      console.log('❌ No file received in req.file');
-      // If no file uploaded, return error since URL is required
       return res.status(400).json({
-        message: 'File is required. Please upload an image or video.',
-        debug: {
-          hasFile: !!req.file,
-          bodyKeys: Object.keys(req.body),
-          contentType: req.get('Content-Type')
-        }
+        message: 'File is required'
       });
     }
 
@@ -106,18 +98,20 @@ const createGalleryItem = async (req, res) => {
       success: true,
       data: gallery,
     });
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
+
 const updateGalleryItem = async (req, res) => {
   try {
     const updateData = req.body;
-const baseUrl = `${req.protocol}://${req.get('host')}`;
+
     if (req.file) {
-      updateData.url = `${baseUrl}/uploads/${req.file.filename}`;
-      updateData.thumbnail = `${baseUrl}/uploads/${req.file.filename}`;
+      updateData.url = req.file.path;           // Cloudinary URL
+      updateData.thumbnail = req.file.path;
     }
 
     const gallery = await Gallery.findByIdAndUpdate(
@@ -134,10 +128,12 @@ const baseUrl = `${req.protocol}://${req.get('host')}`;
       success: true,
       data: gallery,
     });
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 const deleteGalleryItem = async (req, res) => {
   try {
